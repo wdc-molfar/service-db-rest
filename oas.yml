@@ -1,0 +1,116 @@
+openapi: "3.0.2"
+
+
+info: 
+  
+  title: "SERVICE-DB-REST. REST Api to ManticoreSearch"
+  
+  description: "Надає можливості пошуку збережених документів в ManticoreSearch"
+  
+  version: "1.0.1"
+    
+
+servers:
+  
+  - url: "http://localhost:3030"
+    description: "Локальне розроблення"
+# 1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
+paths:
+  /:
+    get: 
+      summary: "Отримати загальний опис сервісу"
+      description: "Повертає сторінку загального опису"
+      tags: 
+        - "Загальна інформація"
+      
+      responses:
+        200: 
+          description: "Успішна відповідь"
+          content:
+            text/html:
+              schema:
+                type: string
+              example: "Not found" 
+
+  /api/timeline:
+    post:
+      security:
+        - bearerAuth: []
+      summary: query for get timeline
+      description: query for get timeline from Manticore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                 query:
+                   description: query of request of fulltext search
+                   type: string
+                   example: Trump
+                 startAt: 
+                   type: string
+                   format: date-time
+                 stopAt:
+                   type: string
+                   format: date-time
+                 points: 
+                   type: integer
+                   example: 50
+      responses:
+        200:
+          description: success
+        500:
+          description: error in server        
+  /api/content:
+    post:
+      security:
+        - bearerAuth: []
+      summary: query for get content
+      description: query for get content from Manticore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                query:
+                  description: query of request of fulltext search
+                  type: string
+                  example: Trump
+                return:
+                  type: array
+                  items: 
+                    type: string
+                    example: subject
+                startAt: 
+                  type: string
+                  format: date-time
+                stopAt:
+                  type: string
+                  format: date-time
+                startIndex: 
+                  type: integer
+                  example: 0 
+                limit: 
+                  type: integer
+                  example: 50
+      responses:
+        200:
+          description: success
+        500:
+          description: error in server
+
+  /api/dict/person:
+    get:
+      summary: query for create dictionary
+      description: query for get content from Manticore
+      responses:
+        200:
+          description: success
+        500:
+          description: error in server        

@@ -1,0 +1,120 @@
+msapi: "1.0.1"
+
+metadata: 
+    id: "@molfar/service-manticore"
+    title: "@molfar source service manticore" 
+
+
+components:
+    schemas:
+        AUTH:
+            type: object
+            required:
+              - user
+              - application
+            properties:
+                user:
+                    type: object
+                    required:
+                        - email
+                        - name
+                    properties:
+                        email:
+                            type: string
+                        name: 
+                            type: string  
+                application:
+                    type: object
+                    required:
+                        - id
+                    properties:
+                        id:
+                           type: string
+        INPUT:
+            type: object
+            
+            required:
+                - schedule
+                - scraper
+                - langDetector
+                - ner 
+                - sentiments
+            
+            properties:
+                
+                schedule:
+                    type: object
+                    required:
+                        - id
+                        - source
+                        - activatedAt
+                    properties:
+                        id:
+                            type: string
+                        source: 
+                            type: string
+                        activatedAt: 
+                            type: string
+                            format: date-time
+                    additionalProperties: true
+                
+                scraper:
+                    type: object
+                    required: 
+                        - message
+                    properties:
+                        message:
+                            type: object                    
+                            required:
+                                - text
+                                - publishedAt
+                            properties:
+                                text:
+                                    type: string
+                                publishedAt:
+                                    type: string         
+                            additionalProperties: true
+                    additionalProperties: true
+
+                langDetector:
+                    type: object
+                    required: 
+                        - language
+                    properties:
+                        language:
+                            type: object                    
+                            required:
+                                - locale
+                            properties:
+                                locale:
+                                    type: string  
+                            additionalProperties: true
+                    additionalProperties: true
+                
+                ner:
+                    type: array
+
+                sentiments:
+                    type: object    
+            
+            additionalProperties: true
+                  
+        
+service:
+    mode: process.env.NODE_ENV || "development"
+    port: process.env.PORT || 3030
+    host: process.env.HOST || "localhost"
+    usePort: process.env.USE_PORT || false
+    secret_key: process.env.SECRET_KEY || "Fam4ExOpM25Vm0_zQ7H_vcz#4"
+    time_expires: process.env.TIME_EXPIRES || '1440h'
+    # The scheduler will recive message from
+    manticore:
+        url: "http://10.6.12.73:9308"
+        update_url: "http://10.6.12.73:9308"
+        auth:
+            $ref: "#/components/schemas/AUTH"  
+        message:
+            $ref: "#/components/schemas/INPUT"    
+
+
+    

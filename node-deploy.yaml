@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-db-rest
+  labels:
+    app.kubernetes.io/name: service-db-rest
+    app.kubernetes.io/component: web
+  namespace: rabbits
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: service-db-rest
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: service-db-rest
+        app.kubernetes.io/component: web
+    spec:
+      containers:
+        - name: service-db-rest
+          image: artem1sobolev/service-db-rest:1.0.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MANTICORE_URL
+              value: "manticore-manticoresearch-balancer-svc.manticore.svc.cluster.local:9308"
+
