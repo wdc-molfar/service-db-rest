@@ -43,7 +43,7 @@ const processLogin = async (req, res) => {
             return res.json({message: schemaErrors})
         }
         client = getClient(config.service.manticore.update_url)
-        const sql    = `select * from manticore_cluster:users where email = '${p.user.email} and app_id = '${p.application.id}';`
+        const sql    = `select * from manticore_cluster:users where email = '${p.user.email}' and app_id = '${p.application.id}';`
         const result = await sqlQuery(sql, client)
         if(!result || result[0].error.length > 0){
             res.status(400)

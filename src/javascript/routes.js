@@ -88,7 +88,10 @@ const sqlRequest = async (req, res) =>{
             sql = decodeURIComponent(sql)
         }
         client = getClient(config.service.manticore.url)
-        const result = await sqlQuery(sql, client)
+        let result = await sqlQuery(sql, client)
+        if(result && result['0']){
+            return res.send(result['0'])
+        }
         return res.send(result)
     }catch(e){
         res.status(500)
@@ -252,7 +255,10 @@ const content = async(req, res) => {
             }
         }
         const sql    = `select * from manticore_cluster:molfar ${queryToSearch} order by id ${sort} ${limit} ${option}`
-        const result = await sqlQuery(sql, client)
+        let result = await sqlQuery(sql, client)
+        if(result && result['0']){
+            return res.send(result['0'])
+        }
         return res.send(result)
     }catch(e){
         res.status(500)
@@ -317,8 +323,10 @@ const timeline = async(req, res) => {
             }
         }
         const sql    = `select YEARMONTHDAY(date) as d, count(*) as count from manticore_cluster:molfar ${queryToSearch} group by d order by d ${sort} ${limit} ${option};`
-        console.log(sql)
-        const result = await sqlQuery(sql, client)
+        let result = await sqlQuery(sql, client)
+        if(result && result['0']){
+            return res.send(result['0'])
+        }
         return res.send(result)
     }catch(e){
         res.status(500)
