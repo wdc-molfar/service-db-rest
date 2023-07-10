@@ -62,7 +62,20 @@ const updateJson = async (req, res) => {
  * @param {Object} res
  * @return {Promise}
  */
- const sqlRequest = async (req, res) =>{
+const decodeURIComponent = (code) =>{
+    // Split the code into lines
+    const lines = code.split('\n');
+  
+    // Filter out lines starting with --
+    const filteredLines = lines.filter(line => !line.trim().startsWith('--'));
+  
+    // Join the filtered lines back into a string
+    const filteredCode = filteredLines.join('\n');
+  
+    return filteredCode;
+}
+
+const sqlRequest = async (req, res) =>{
     try{
         const p = getRequestParams(req)
         if(!p.sql){
@@ -72,6 +85,7 @@ const updateJson = async (req, res) => {
         let sql = p.sql
         if(p.decode){
             sql = decodeURI(p.sql)
+            sql = decodeURIComponent(sql)
         }
         client = getClient(config.service.manticore.url)
         const result = await sqlQuery(sql, client)
